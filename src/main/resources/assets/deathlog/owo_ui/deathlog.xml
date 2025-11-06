@@ -1,0 +1,167 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.19.3/owo-ui.xsd">
+    <components>
+        <flow-layout direction="horizontal">
+            <children>
+                <flow-layout direction="vertical">
+                    <children>
+                        <flow-layout direction="horizontal">
+                            <children>
+                                <label id="death-count-label">
+                                    <shadow>true</shadow>
+                                </label>
+                            </children>
+
+                            <surface>
+                                <flat>#77000000</flat>
+                            </surface>
+
+                            <padding>
+                                <all>5</all>
+                            </padding>
+
+                            <horizontal-alignment>center</horizontal-alignment>
+
+                            <sizing>
+                                <horizontal method="fill">100</horizontal>
+                            </sizing>
+                            <positioning type="relative">0,0</positioning>
+                        </flow-layout>
+
+                        <scroll direction="vertical">
+                            <flow-layout direction="vertical" id="death-list">
+                                <children/>
+                            </flow-layout>
+
+                            <padding>
+                                <all>2</all>
+                            </padding>
+
+                            <margins>
+                                <top>17</top>
+                                <bottom>25</bottom>
+                            </margins>
+
+                            <sizing>
+                                <horizontal method="fill">100</horizontal>
+                                <vertical method="fill">100</vertical>
+                            </sizing>
+                        </scroll>
+
+                        <flow-layout direction="horizontal">
+                            <children>
+                                <texture texture="owo:textures/gui/config_search.png"
+                                         texture-width="16" texture-height="16"
+                                         region-width="16" region-height="16"/>
+
+                                <text-box id="search-box">
+                                    <sizing>
+                                        <horizontal method="fill">80</horizontal>
+                                    </sizing>
+                                    <show-background>false</show-background>
+                                </text-box>
+                            </children>
+
+                            <padding>
+                                <all>4</all>
+                            </padding>
+
+                            <sizing>
+                                <horizontal method="fill">100</horizontal>
+                            </sizing>
+
+                            <positioning type="relative">0,100</positioning>
+                            <vertical-alignment>center</vertical-alignment>
+                        </flow-layout>
+                    </children>
+
+                    <surface>
+                        <flat>#77000000</flat>
+                        <outline>#77000000</outline>
+                    </surface>
+
+                    <sizing>
+                        <horizontal method="fill">40</horizontal>
+                        <vertical method="fill">100</vertical>
+                    </sizing>
+                </flow-layout>
+
+                <flow-layout direction="vertical" id="detail-panel">
+                    <children>
+                        <flow-layout direction="vertical">
+                            <children>
+                                <label>
+                                    <text translate="true">text.deathlog.no_info_selected_hint</text>
+                                    <horizontal-text-alignment>center</horizontal-text-alignment>
+                                </label>
+                            </children>
+
+                            <sizing>
+                                <vertical method="fill">100</vertical>
+                            </sizing>
+
+                            <vertical-alignment>center</vertical-alignment>
+                        </flow-layout>
+                    </children>
+
+                    <margins>
+                        <left>20</left>
+                    </margins>
+                </flow-layout>
+
+                <button id="config-button">
+                    <text translate="true">text.deathlog.config</text>
+                    <renderer>
+                        <flat color="#77000000" hovered-color="#77afafaf" disabled-color="black"/>
+                    </renderer>
+                    <sizing>
+                        <vertical method="fixed">16</vertical>
+                    </sizing>
+                </button>
+            </children>
+
+            <allow-overflow>true</allow-overflow>
+
+            <padding>
+                <all>15</all>
+            </padding>
+
+            <surface>
+                <vanilla-translucent/>
+            </surface>
+        </flow-layout>
+    </components>
+
+    <templates>
+        <death-list-entry>
+            <deathlog.death-list-entry-container>
+                <children>
+                    <flow-layout direction="vertical">
+                        <children>
+                            <label>
+                                <text>{{death-time}}</text>
+                                <cursor-style>hand</cursor-style>
+                            </label>
+
+                            <label>
+                                <text>{{death-message}}</text>
+                                <cursor-style>hand</cursor-style>
+                            </label>
+                        </children>
+
+                        <padding>
+                            <all>4</all>
+                        </padding>
+                    </flow-layout>
+                </children>
+
+                <vertical-alignment>center</vertical-alignment>
+
+                <sizing>
+                    <vertical method="fixed">30</vertical>
+                    <horizontal method="fill">100</horizontal>
+                </sizing>
+            </deathlog.death-list-entry-container>
+        </death-list-entry>
+    </templates>
+</owo-ui>

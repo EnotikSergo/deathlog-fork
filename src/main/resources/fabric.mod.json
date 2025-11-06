@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "id": "deathlog",
+  "version": "${version}",
+  "name": "DeathLog",
+  "description": "Keeps track of the many embarrassing times you died",
+  "authors": [
+    "glisco"
+  ],
+  "contact": {
+    "issues": "https://github.com/gliscowo/deathlog/issues",
+    "sources": "https://github.com/gliscowo/deathlog",
+    "homepage": "https://modrinth.com/mod/deathlog"
+  },
+  "license": "MIT",
+  "icon": "assets/deathlog/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.glisco.deathlog.DeathLogCommon"
+    ],
+    "client": [
+      "com.glisco.deathlog.client.DeathLogClient"
+    ],
+    "server": [
+      "com.glisco.deathlog.server.DeathLogServer"
+    ]
+  },
+  "mixins": [
+    "deathlog.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": "*",
+    "fabric": "*",
+    "minecraft": ">=1.20.3",
+    "owo-lib": ">=0.9.3"
+  },
+  "suggests": {
+    "trinkets": ">=3.4.0"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/xrwHKktV2d"
+      }
+    }
+  }
+}
