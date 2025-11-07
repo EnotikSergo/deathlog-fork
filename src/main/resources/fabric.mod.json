@@ -2,15 +2,14 @@
   "schemaVersion": 1,
   "id": "deathlog",
   "version": "${version}",
-  "name": "DeathLog",
+  "name": "DeathLog-Fork",
   "description": "Keeps track of the many embarrassing times you died",
   "authors": [
-    "glisco"
+    "glisco","EnotikSergo"
   ],
   "contact": {
-    "issues": "https://github.com/gliscowo/deathlog/issues",
-    "sources": "https://github.com/gliscowo/deathlog",
-    "homepage": "https://modrinth.com/mod/deathlog"
+    "issues": "https://github.com/EnotikSergo/deathlog-fork/issues",
+    "sources": "https://github.com/EnotikSergo/deathlog-fork"
   },
   "license": "MIT",
   "icon": "assets/deathlog/icon.png",
@@ -32,17 +31,10 @@
   "depends": {
     "fabricloader": "*",
     "fabric": "*",
-    "minecraft": ">=1.20.3",
+    "minecraft": ">=1.21.9",
     "owo-lib": ">=0.9.3"
   },
   "suggests": {
     "trinkets": ">=3.4.0"
-  },
-  "custom": {
-    "modmenu": {
-      "links": {
-        "modmenu.discord": "https://discord.gg/xrwHKktV2d"
-      }
-    }
   }
 }
