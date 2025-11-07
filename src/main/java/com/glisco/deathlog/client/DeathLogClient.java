@@ -24,7 +24,7 @@ public class DeathLogClient implements ClientModInitializer {
 
     public static final com.glisco.deathlog.client.DeathLogConfig CONFIG = com.glisco.deathlog.client.DeathLogConfig.createAndLoad();
 
-    public static final KeyBinding OPEN_DEATH_SCREEN = new KeyBinding("key.deathlog.death_screen", GLFW.GLFW_KEY_END, "key.categories.misc");
+    public static final KeyBinding OPEN_DEATH_SCREEN = new KeyBinding("key.deathlog.death_screen", GLFW.GLFW_KEY_END, KeyBinding.Category.MISC);
     private static ClientDeathLogStorage storage;
 
     @Override

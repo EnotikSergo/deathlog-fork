@@ -15,6 +15,7 @@ import io.wispforest.owo.ui.core.Sizing;
 import io.wispforest.owo.ui.core.Surface;
 import io.wispforest.owo.ui.parsing.UIParsing;
 import io.wispforest.owo.util.Observable;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.component.Component;
 import net.minecraft.item.Item;
@@ -120,18 +121,18 @@ public class DeathLogScreen extends BaseUIModelScreen<FlowLayout> {
                         this.selectInfo(this.storage.getDeathInfoList().get(infoIndex));
                     });
 
-                    container.mouseDown().subscribe((mouseX, mouseY, button) -> {
-                        if (button != GLFW.GLFW_MOUSE_BUTTON_RIGHT) return false;
+                    container.mouseDown().subscribe((Click click, boolean doubled) -> {
+                        if (click.button() != GLFW.GLFW_MOUSE_BUTTON_RIGHT) return false;
 
                         var root = this.uiAdapter.rootComponent;
                         DropdownComponent.openContextMenu(
                                 this,
                                 root, FlowLayout::child,
-                                container.x() - root.padding().get().left() + mouseX,
-                                container.y() - root.padding().get().top() + mouseY,
+                                container.x() - root.padding().get().left() + click.x(),
+                                container.y() - root.padding().get().top() + click.y(),
                                 dropdown -> {
                                     dropdown.surface(Surface.blur(3, 5).and(Surface.flat(0xC7000000)).and(Surface.outline(0xFF121212)));
-                                    dropdown.zIndex(100);
+                                    //dropdown.zIndex(100);
 
                                     if (this.canRestore) {
                                         dropdown.button(Text.translatable("text.deathlog.action.restore"), dropdown_ -> {
@@ -227,8 +228,8 @@ public class DeathLogScreen extends BaseUIModelScreen<FlowLayout> {
             tooltip.add(Text.translatable(this.client.player.isCreative() ? "text.deathlog.action.give_item.spawn" : "text.deathlog.action.give_item.copy_give"));
             item.tooltip(tooltip);
 
-            item.mouseDown().subscribe((mouseX, mouseY, button) -> {
-                if (button != GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
+            item.mouseDown().subscribe((Click click, boolean doubled) -> {
+                if (click.button() != GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
 
                 if (this.client.player.isCreative()) {
                     this.client.interactionManager.dropCreativeStack(stack);
