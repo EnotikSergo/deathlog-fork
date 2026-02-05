@@ -27,7 +27,7 @@ public class DeathListEntryContainer extends FlowLayout {
     }
 
     @Override
-    public void draw(OwoUIDrawContext context, int mouseX, int mouseY, float partialTicks, float delta) {
+    public void draw(OwoUIGraphics context, int mouseX, int mouseY, float partialTicks, float delta) {
         super.draw(context, mouseX, mouseY, partialTicks, delta);
         if (this.selected) context.drawRectOutline(this.x, this.y, this.width, this.height, 0xFFAFAFAF);
     }

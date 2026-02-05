@@ -1,0 +1,61 @@
+{
+  "owo:rich_translations": true,
+  "deathlog.deathinfoproperty.coordinates": "Координаты",
+  "deathlog.deathinfoproperty.coordinates.value": [
+    {"index": 0, "color": "red"},
+    " ",
+    {"index": 1, "color": "green"},
+    " ",
+    {"index": 2, "color": "aqua"}
+  ],
+  "deathlog.deathinfoproperty.dimension": "Измерение",
+  "deathlog.deathinfoproperty.location.singleplayer": "Одиночный мир",
+  "deathlog.deathinfoproperty.location.multiplayer": "Мультиплеер",
+  "deathlog.deathinfoproperty.location": "Локация",
+  "deathlog.deathinfoproperty.location.value": [
+    {"index": 0},
+    {"text": " (", "color": "gray"},
+    {"index": 1, "color": "gray"},
+    {"text": ")", "color": "gray"}
+  ],
+  "deathlog.deathinfoproperty.score": "Счёт",
+  "deathlog.deathinfoproperty.score.value": [
+    {"index": 0},
+    {"text": " (", "color": "gray"},
+    {"index": 1, "color": "gray"},
+    {"text": " levels, ", "color": "gray"},
+    {"index": 2, "color": "gray"},
+    {"text": " xp)", "color": "gray"}
+  ],
+  "deathlog.deathinfoproperty.death_message": "Причина смерти",
+  "deathlog.deathinfoproperty.time_of_death": "Время смерти",
+  "deathlog.deathinfoproperty.trinket_component": "Тринкеты",
+  "deathlog.deathinfoproperty.trinket_component.value": [
+    "",
+    {"index": 0, "color": "aqua"},
+    " items"
+  ],
+  "key.deathlog.death_screen": "Окно журнала смерти",
+
+  "text.deathlog.action.restore": "Восстановить",
+  "text.deathlog.action.give_item.spawn": {"text": "Нажмите Mouse 3 для спавна предмета", "color": "gray"},
+  "text.deathlog.action.give_item.copy_give": {"text": "Нажмите Mouse 3 для копирования в /give", "color": "gray"},
+  "text.deathlog.action.delete": {"text": "Удалить", "color": "red"},
+
+  "text.deathlog.info.time_missing": "Время неизвестно",
+  "text.deathlog.info.death_message_missing": "Причина смерти неизвестна",
+
+  "text.deathlog.death_list_title": "Журнал смерти - %s всего",
+  "text.deathlog.death_info_loading": "Загрузка...",
+  "text.deathlog.no_info_selected_hint": "Выбери историю о смерти из списка для начала",
+
+  "text.deathlog.config": "⇄ Конфиг",
+  "text.config.deathlog.title": "Журнал смерти: Настройки",
+  "text.config.deathlog.option.screenshotsEnabled": "Скришот при смерти",
+  "text.config.deathlog.option.useLegacyDeathDetection": "Использовать устаревший метод обнаружения смертей",
+  "text.config.deathlog.option.useLegacyDeathDetection.tooltip": [
+    "Использует менее надежный, но более чувствительный\n",
+    "метод обнаружения смертей, который работает\n",
+    "с помощью протоколов, таких как ViaFabric"
+  ]
+}
