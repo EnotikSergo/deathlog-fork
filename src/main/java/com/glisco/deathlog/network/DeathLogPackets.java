@@ -18,14 +18,14 @@ import io.wispforest.owo.serialization.RegistriesAttribute;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 import java.util.UUID;
 
 public class DeathLogPackets {
 
-    public static final OwoNetChannel CHANNEL = OwoNetChannel.create(Identifier.of("deathlog", "channel"));
+    public static final OwoNetChannel CHANNEL = OwoNetChannel.create(Identifier.fromNamespaceAndPath("deathlog", "channel"));
 
     public static void init() {
         CHANNEL.builder().register(DeathInfo.ENDEC, DeathInfo.class);
@@ -51,7 +51,7 @@ public class DeathLogPackets {
                 return;
             }
 
-            var targetPlayer = access.runtime().getPlayerManager().getPlayer(message.profile);
+            var targetPlayer = access.runtime().getPlayerList().getPlayer(message.profile);
             if (targetPlayer == null) {
                 BaseDeathLogStorage.LOGGER.warn("Received restore packet for invalid player");
                 return;
@@ -64,7 +64,7 @@ public class DeathLogPackets {
             }
 
             var info = DeathInfo.ENDEC.decodeFully(
-                    SerializationContext.attributes(RegistriesAttribute.of(access.runtime().getRegistryManager())),
+                    SerializationContext.attributes(RegistriesAttribute.of(access.runtime().registryAccess())),
                     EdmDeserializer::of,
                     DeathInfo.ENDEC.encodeFully(
                             SerializationContext.attributes(RegistriesAttribute.of(DeathLogCommon.getStorage().registries())),
@@ -96,7 +96,7 @@ public class DeathLogPackets {
         });
 
         CHANNEL.registerClientbound(DeathInfoData.class, (message, access) -> {
-            if (!(access.runtime().currentScreen instanceof DeathLogScreen screen)) {
+            if (!(access.runtime().screen instanceof DeathLogScreen screen)) {
                 BaseDeathLogStorage.LOGGER.warn("Received invalid death info packet");
                 return;
             }

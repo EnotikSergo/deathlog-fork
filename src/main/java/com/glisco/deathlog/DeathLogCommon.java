@@ -8,15 +8,15 @@ import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 
 public class DeathLogCommon implements ModInitializer {
 
     public static final Registry<DeathInfoPropertyType<?>> PROPERTY_TYPES = FabricRegistryBuilder
-        .createSimple(RegistryKey.<DeathInfoPropertyType<?>>ofRegistry(Identifier.of("deathlog", "property_type")))
+        .createSimple(ResourceKey.<DeathInfoPropertyType<?>>createRegistryKey(Identifier.fromNamespaceAndPath("deathlog", "property_type")))
         .buildAndRegister();
 
     private static DeathLogStorage currentStorage = null;

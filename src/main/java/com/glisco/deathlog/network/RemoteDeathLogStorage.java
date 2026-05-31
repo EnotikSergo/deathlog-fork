@@ -3,9 +3,9 @@ package com.glisco.deathlog.network;
 import com.glisco.deathlog.client.DeathInfo;
 import com.glisco.deathlog.storage.BaseDeathLogStorage;
 import com.glisco.deathlog.storage.DirectDeathLogStorage;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public class RemoteDeathLogStorage extends BaseDeathLogStorage implements Direct
     private final UUID profileId;
 
     public RemoteDeathLogStorage(List<DeathInfo> deathInfoList, UUID profileId) {
-        super(MinecraftClient.getInstance().world.getRegistryManager());
+        super(Minecraft.getInstance().level.registryAccess());
         this.deathInfoList = deathInfoList;
         this.profileId = profileId;
     }
@@ -35,7 +35,7 @@ public class RemoteDeathLogStorage extends BaseDeathLogStorage implements Direct
     }
 
     @Override
-    public void store(Text deathMessage, PlayerEntity player) {
+    public void store(Component deathMessage, Player player) {
         //NO-OP
     }
 

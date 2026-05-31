@@ -1,19 +1,19 @@
 package com.glisco.deathlog.death_info;
 
 import io.wispforest.endec.Endec;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 public interface DeathInfoProperty {
 
     Endec<DeathInfoProperty> ENDEC = Endec.dispatchedStruct(DeathInfoPropertyType::endec, DeathInfoProperty::getType, DeathInfoPropertyType.ENDEC);
 
-    default Text getName() {
+    default Component getName() {
         return DeathInfoPropertyType.decorateName(getType().getName());
     }
 
     DeathInfoPropertyType<?> getType();
 
-    Text formatted();
+    Component formatted();
 
     String toSearchableString();
 }

@@ -15,16 +15,16 @@ import io.wispforest.owo.ui.core.Sizing;
 import io.wispforest.owo.ui.core.Surface;
 import io.wispforest.owo.ui.parsing.UIParsing;
 import io.wispforest.owo.util.Observable;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.component.Component;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.component.TypedDataComponent;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.registry.Registries;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Locale;
@@ -43,7 +43,7 @@ public class DeathLogScreen extends BaseUIModelScreen<FlowLayout> {
     private boolean canRestore = true;
 
     public DeathLogScreen(Screen parent, DirectDeathLogStorage storage) {
-        super(FlowLayout.class, DataSource.asset(Identifier.of("deathlog", "deathlog")));
+        super(FlowLayout.class, DataSource.asset(Identifier.fromNamespaceAndPath("deathlog", "deathlog")));
         this.parent = parent;
         this.storage = storage;
 
@@ -78,11 +78,11 @@ public class DeathLogScreen extends BaseUIModelScreen<FlowLayout> {
         });
 
         rootComponent.childById(ButtonComponent.class, "config-button").onPress(button -> {
-            this.client.setScreen(ConfigScreenProviders.get("deathlog").apply(this));
+            this.minecraft.setScreen(ConfigScreenProviders.get("deathlog").apply(this));
         });
 
         this.uiAdapter.rootComponent.childById(LabelComponent.class, "death-count-label").text(
-                Text.translatable("text.deathlog.death_list_title", this.storage.getDeathInfoList().size())
+                Component.translatable("text.deathlog.death_list_title", this.storage.getDeathInfoList().size())
         );
 
         this.buildDeathList();
@@ -121,7 +121,7 @@ public class DeathLogScreen extends BaseUIModelScreen<FlowLayout> {
                         this.selectInfo(this.storage.getDeathInfoList().get(infoIndex));
                     });
 
-                    container.mouseDown().subscribe((Click click, boolean doubled) -> {
+                    container.mouseDown().subscribe((MouseButtonEvent click, boolean doubled) -> {
                         if (click.button() != GLFW.GLFW_MOUSE_BUTTON_RIGHT) return false;
 
                         var root = this.uiAdapter.rootComponent;
@@ -135,13 +135,13 @@ public class DeathLogScreen extends BaseUIModelScreen<FlowLayout> {
                                     //dropdown.zIndex(100);
 
                                     if (this.canRestore) {
-                                        dropdown.button(Text.translatable("text.deathlog.action.restore"), dropdown_ -> {
+                                        dropdown.button(Component.translatable("text.deathlog.action.restore"), dropdown_ -> {
                                             this.storage.restore(infoIndex);
                                             dropdown.remove();
                                         });
                                     }
 
-                                    dropdown.button(Text.translatable("text.deathlog.action.delete"), dropdown_ -> {
+                                    dropdown.button(Component.translatable("text.deathlog.action.delete"), dropdown_ -> {
                                         this.storage.delete(deathInfo);
                                         this.buildDeathList();
                                         dropdown.remove();
@@ -163,7 +163,7 @@ public class DeathLogScreen extends BaseUIModelScreen<FlowLayout> {
             panel.clearChildren();
 
             if (info.isPartial()) {
-                panel.child(UIComponents.label(Text.translatable("text.deathlog.death_info_loading")).margins(Insets.top(15)));
+                panel.child(UIComponents.label(Component.translatable("text.deathlog.death_info_loading")).margins(Insets.top(15)));
                 return;
             }
 
@@ -189,7 +189,7 @@ public class DeathLogScreen extends BaseUIModelScreen<FlowLayout> {
             panel.child(itemContainer = UIContainers.verticalFlow(Sizing.content(), Sizing.content()));
             itemContainer.margins(Insets.top(5));
 
-            itemContainer.child(UIComponents.texture(Identifier.of("deathlog", "textures/gui/inventory_overlay.png"), 0, 0, 210, 107));
+            itemContainer.child(UIComponents.texture(Identifier.fromNamespaceAndPath("deathlog", "textures/gui/inventory_overlay.png"), 0, 0, 210, 107));
 
             FlowLayout armorFlow;
             itemContainer.child(armorFlow = UIContainers.verticalFlow(Sizing.content(), Sizing.content()));
@@ -224,30 +224,30 @@ public class DeathLogScreen extends BaseUIModelScreen<FlowLayout> {
         item.margins(margins);
 
         if (!stack.isEmpty()) {
-            var tooltip = stack.getTooltip(Item.TooltipContext.DEFAULT, client.player, client.options.advancedItemTooltips ? TooltipType.ADVANCED : TooltipType.BASIC);
-            tooltip.add(Text.translatable(this.client.player.isCreative() ? "text.deathlog.action.give_item.spawn" : "text.deathlog.action.give_item.copy_give"));
+            var tooltip = stack.getTooltipLines(Item.TooltipContext.EMPTY, minecraft.player, minecraft.options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL);
+            tooltip.add(Component.translatable(this.minecraft.player.isCreative() ? "text.deathlog.action.give_item.spawn" : "text.deathlog.action.give_item.copy_give"));
             item.tooltip(tooltip);
 
-            item.mouseDown().subscribe((Click click, boolean doubled) -> {
+            item.mouseDown().subscribe((MouseButtonEvent click, boolean doubled) -> {
                 if (click.button() != GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
 
-                if (this.client.player.isCreative()) {
-                    this.client.interactionManager.dropCreativeStack(stack);
+                if (this.minecraft.player.isCreative()) {
+                    this.minecraft.gameMode.handleCreativeModeItemDrop(stack);
                 } else {
-                    var command = "/give " + client.player.getName().getString() +
+                    var command = "/give " + minecraft.player.getName().getString() +
                             " " +
-                            Registries.ITEM.getId(stack.getItem());
+                            BuiltInRegistries.ITEM.getKey(stack.getItem());
 
-                    var ops = storage.registries().getOps(NbtOps.INSTANCE);
-                    var components = stack.getComponentChanges().entrySet().stream().flatMap(entry -> {
+                    var ops = storage.registries().createSerializationContext(NbtOps.INSTANCE);
+                    var components = stack.getComponentsPatch().entrySet().stream().flatMap(entry -> {
                         var componentType = entry.getKey();
-                        var typeId = Registries.DATA_COMPONENT_TYPE.getId(componentType);
+                        var typeId = BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(componentType);
                         if (typeId == null) return Stream.empty();
 
                         var componentOptional = entry.getValue();
                         if (componentOptional.isPresent()) {
-                            Component<?> component = Component.of(componentType, componentOptional.get());
-                            return component.encode(ops).result().stream().map(value -> typeId + "=" + value);
+                            TypedDataComponent<?> component = TypedDataComponent.createUnchecked(componentType, componentOptional.get());
+                            return component.encodeValue(ops).result().stream().map(value -> typeId + "=" + value);
                         } else {
                             return Stream.of("!" + typeId);
                         }
@@ -261,7 +261,7 @@ public class DeathLogScreen extends BaseUIModelScreen<FlowLayout> {
                         command += " " + stack.getCount();
                     }
 
-                    this.client.keyboard.setClipboard(command);
+                    this.minecraft.keyboardHandler.setClipboard(command);
                 }
 
                 return true;
@@ -272,11 +272,11 @@ public class DeathLogScreen extends BaseUIModelScreen<FlowLayout> {
     }
 
     @Override
-    public void close() {
-        this.client.setScreen(this.parent);
+    public void onClose() {
+        this.minecraft.setScreen(this.parent);
     }
 
     static {
-        UIParsing.registerFactory(Identifier.of("deathlog", "death-list-entry-container"), element -> new DeathListEntryContainer());
+        UIParsing.registerFactory(Identifier.fromNamespaceAndPath("deathlog", "death-list-entry-container"), element -> new DeathListEntryContainer());
     }
 }

@@ -1,9 +1,9 @@
 package com.glisco.deathlog.storage;
 
 import com.glisco.deathlog.client.DeathInfo;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.text.Text;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -15,11 +15,11 @@ public interface DeathLogStorage {
 
     void delete(DeathInfo info, @Nullable UUID profile);
 
-    void store(Text deathMessage, PlayerEntity player);
+    void store(Component deathMessage, Player player);
 
     void restore(int index, @Nullable UUID profile);
 
     boolean isErrored();
 
-    DynamicRegistryManager registries();
+    RegistryAccess registries();
 }

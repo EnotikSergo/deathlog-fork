@@ -3,7 +3,7 @@ package com.glisco.deathlog.death_info;
 import com.glisco.deathlog.DeathLogCommon;
 import com.glisco.deathlog.death_info.properties.*;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
-import net.minecraft.registry.Registry;
+import net.minecraft.core.Registry;
 
 public class DeathInfoPropertyTypes implements AutoRegistryContainer<DeathInfoPropertyType<?>> {
 

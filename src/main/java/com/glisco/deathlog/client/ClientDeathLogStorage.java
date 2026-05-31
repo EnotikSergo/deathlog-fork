@@ -9,10 +9,10 @@ import com.glisco.deathlog.storage.BaseDeathLogStorage;
 import com.glisco.deathlog.storage.DeathInfoCreatedCallback;
 import com.glisco.deathlog.storage.DirectDeathLogStorage;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.toast.SystemToast;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.toasts.SystemToast;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.chat.Component;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,16 +27,16 @@ public class ClientDeathLogStorage extends BaseDeathLogStorage implements Direct
     private final List<DeathInfo> deathInfos;
     private final File deathLogFile;
 
-    public ClientDeathLogStorage(MinecraftClient client) {
-        super(client.world.getRegistryManager());
+    public ClientDeathLogStorage(Minecraft client) {
+        super(client.level.registryAccess());
         var worldSuffix = DigestUtils.sha1Hex(
-                client.isInSingleplayer()
-                        ? ((MinecraftServerAccessor) client.getServer()).deathlog_getSession().getDirectoryName()
-                        : client.getCurrentServerEntry().name
+                client.isLocalServer()
+                        ? ((MinecraftServerAccessor) client.getSingleplayerServer()).deathlog_getSession().getLevelId()
+                        : client.getCurrentServer().name
         ).substring(0, 10);
 
         this.deathLogFile = FabricLoader.getInstance().getGameDir().resolve("deathlog").resolve("deaths_" + worldSuffix + ".dat").toFile();
-        this.deathInfos = load(client.world.getRegistryManager(), deathLogFile).join();
+        this.deathInfos = load(client.level.registryAccess(), deathLogFile).join();
 
         var deathLogDir = FabricLoader.getInstance().getGameDir().resolve("deathlog").toAbsolutePath();
 
@@ -54,23 +54,23 @@ public class ClientDeathLogStorage extends BaseDeathLogStorage implements Direct
     @Override
     public void delete(DeathInfo info, @Nullable UUID profile) {
         deathInfos.remove(info);
-        save(MinecraftClient.getInstance().world.getRegistryManager(), deathLogFile, deathInfos);
+        save(Minecraft.getInstance().level.registryAccess(), deathLogFile, deathInfos);
     }
 
     @Override
-    public void store(Text deathMessage, PlayerEntity player) {
+    public void store(Component deathMessage, Player player) {
         final DeathInfo deathInfo = new DeathInfo();
-        final MinecraftClient client = MinecraftClient.getInstance();
+        final Minecraft client = Minecraft.getInstance();
 
         deathInfo.setProperty(DeathInfo.INVENTORY_KEY, new InventoryProperty(player.getInventory()));
 
-        deathInfo.setProperty(DeathInfo.COORDINATES_KEY, new CoordinatesProperty(player.getBlockPos()));
-        deathInfo.setProperty(DeathInfo.DIMENSION_KEY, new StringProperty("deathlog.deathinfoproperty.dimension", player.getEntityWorld().getRegistryKey().getValue().toString()));
+        deathInfo.setProperty(DeathInfo.COORDINATES_KEY, new CoordinatesProperty(player.blockPosition()));
+        deathInfo.setProperty(DeathInfo.DIMENSION_KEY, new StringProperty("deathlog.deathinfoproperty.dimension", player.level().dimension().identifier().toString()));
 
-        if (client.isInSingleplayer()) {
-            deathInfo.setProperty(DeathInfo.LOCATION_KEY, new LocationProperty(((MinecraftServerAccessor) client.getServer()).deathlog_getSession().getDirectoryName(), false));
+        if (client.isLocalServer()) {
+            deathInfo.setProperty(DeathInfo.LOCATION_KEY, new LocationProperty(((MinecraftServerAccessor) client.getSingleplayerServer()).deathlog_getSession().getLevelId(), false));
         } else {
-            deathInfo.setProperty(DeathInfo.LOCATION_KEY, new LocationProperty(client.getCurrentServerEntry().name, true));
+            deathInfo.setProperty(DeathInfo.LOCATION_KEY, new LocationProperty(client.getCurrentServer().name, true));
         }
 
         deathInfo.setProperty(DeathInfo.SCORE_KEY, new ScoreProperty(player.getScore(), player.experienceLevel, player.experienceProgress, player.totalExperience));
@@ -81,13 +81,13 @@ public class ClientDeathLogStorage extends BaseDeathLogStorage implements Direct
         DeathInfoCreatedCallback.EVENT.invoker().event(deathInfo);
 
         deathInfos.add(deathInfo);
-        save(MinecraftClient.getInstance().world.getRegistryManager(), deathLogFile, deathInfos);
+        save(Minecraft.getInstance().level.registryAccess(), deathLogFile, deathInfos);
     }
 
     @Override
     public void restore(int index, @Nullable UUID profile) {
         DeathLogPackets.CHANNEL.clientHandle().send(new DeathLogPackets.RestoreRequest(
-                MinecraftClient.getInstance().player.getUuid(),
+                Minecraft.getInstance().player.getUUID(),
                 index
         ));
     }
@@ -96,7 +96,7 @@ public class ClientDeathLogStorage extends BaseDeathLogStorage implements Direct
     protected void raiseError(String error) {
         super.raiseError(error);
 
-        MinecraftClient.getInstance().getToastManager().add(new DeathLogToast(SystemToast.Type.PACK_LOAD_FAILURE, Text.of("DeathLog Database Error"), Text.of(error)));
-        MinecraftClient.getInstance().getToastManager().add(new DeathLogToast(SystemToast.Type.PACK_LOAD_FAILURE, Text.of("DeathLog Problem"), Text.of("Check your log for details")));
+        Minecraft.getInstance().getToastManager().addToast(new DeathLogToast(SystemToast.SystemToastId.PACK_LOAD_FAILURE, Component.nullToEmpty("DeathLog Database Error"), Component.nullToEmpty(error)));
+        Minecraft.getInstance().getToastManager().addToast(new DeathLogToast(SystemToast.SystemToastId.PACK_LOAD_FAILURE, Component.nullToEmpty("DeathLog Problem"), Component.nullToEmpty("Check your log for details")));
     }
 }

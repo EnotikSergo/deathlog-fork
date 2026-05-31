@@ -5,8 +5,8 @@ import com.glisco.deathlog.death_info.DeathInfoPropertyType;
 import io.wispforest.endec.Endec;
 import io.wispforest.endec.StructEndec;
 import io.wispforest.endec.impl.StructEndecBuilder;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 
 public class StringProperty implements DeathInfoProperty {
 
@@ -30,8 +30,8 @@ public class StringProperty implements DeathInfoProperty {
     }
 
     @Override
-    public Text formatted() {
-        return Text.literal(data);
+    public Component formatted() {
+        return Component.literal(data);
     }
 
     @Override
@@ -40,8 +40,8 @@ public class StringProperty implements DeathInfoProperty {
     }
 
     @Override
-    public Text getName() {
-        return DeathInfoPropertyType.decorateName(Text.translatable(translationKey));
+    public Component getName() {
+        return DeathInfoPropertyType.decorateName(Component.translatable(translationKey));
     }
 
     public static class Type extends DeathInfoPropertyType<StringProperty> {
@@ -49,7 +49,7 @@ public class StringProperty implements DeathInfoProperty {
         public static final Type INSTANCE = new Type();
 
         private Type() {
-            super("deathlog.deathinfoproperty.string", Identifier.of("deathlog", "string"));
+            super("deathlog.deathinfoproperty.string", Identifier.fromNamespaceAndPath("deathlog", "string"));
         }
 
         @Override

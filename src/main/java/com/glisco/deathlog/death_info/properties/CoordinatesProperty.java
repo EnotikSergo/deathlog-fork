@@ -5,9 +5,9 @@ import com.glisco.deathlog.death_info.DeathInfoPropertyType;
 import io.wispforest.endec.StructEndec;
 import io.wispforest.endec.impl.StructEndecBuilder;
 import io.wispforest.owo.serialization.endec.MinecraftEndecs;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.core.BlockPos;
 
 public class CoordinatesProperty implements DeathInfoProperty {
 
@@ -28,8 +28,8 @@ public class CoordinatesProperty implements DeathInfoProperty {
     }
 
     @Override
-    public Text formatted() {
-        return Text.translatable("deathlog.deathinfoproperty.coordinates.value", coordinates.getX(), coordinates.getY(), coordinates.getZ());
+    public Component formatted() {
+        return Component.translatable("deathlog.deathinfoproperty.coordinates.value", coordinates.getX(), coordinates.getY(), coordinates.getZ());
     }
 
     @Override
@@ -42,7 +42,7 @@ public class CoordinatesProperty implements DeathInfoProperty {
         public static final Type INSTANCE = new Type();
 
         private Type() {
-            super("deathlog.deathinfoproperty.coordinates", Identifier.of("deathlog", "coordinates"));
+            super("deathlog.deathinfoproperty.coordinates", Identifier.fromNamespaceAndPath("deathlog", "coordinates"));
         }
 
         @Override

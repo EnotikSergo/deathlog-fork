@@ -1,6 +1,6 @@
 package com.glisco.deathlog.mixin;
 
-import net.minecraft.client.toast.SystemToast;
+import net.minecraft.client.gui.components.toasts.SystemToast;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 

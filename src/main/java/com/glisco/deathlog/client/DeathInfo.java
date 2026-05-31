@@ -6,10 +6,10 @@ import com.glisco.deathlog.death_info.properties.InventoryProperty;
 import com.glisco.deathlog.death_info.properties.TrinketComponentProperty;
 import io.wispforest.endec.Endec;
 import io.wispforest.endec.impl.StructEndecBuilder;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.core.NonNullList;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -51,7 +51,7 @@ public class DeathInfo {
         this.properties = properties;
     }
 
-    public void restore(ServerPlayerEntity player) {
+    public void restore(ServerPlayer player) {
         properties.values().stream().filter(property -> property instanceof RestorableDeathInfoProperty).forEach(property -> ((RestorableDeathInfoProperty) property).restore(player));
     }
 
@@ -67,24 +67,24 @@ public class DeathInfo {
         return getProperty(INVENTORY_KEY).isEmpty();
     }
 
-    public Text getListName() {
+    public Component getListName() {
         DeathInfoProperty property = getProperty(TIME_OF_DEATH_KEY).orElse(null);
-        return property == null ? Text.translatable("text.deathlog.info.time_missing") : property.formatted();
+        return property == null ? Component.translatable("text.deathlog.info.time_missing") : property.formatted();
     }
 
-    public Text getTitle() {
+    public Component getTitle() {
         DeathInfoProperty property = getProperty(DEATH_MESSAGE_KEY).orElse(null);
-        return property == null ? Text.translatable("text.deathlog.info.death_message_missing") : property.formatted();
+        return property == null ? Component.translatable("text.deathlog.info.death_message_missing") : property.formatted();
     }
 
-    public List<Text> getLeftColumnText() {
-        final var texts = new ArrayList<Text>();
+    public List<Component> getLeftColumnText() {
+        final var texts = new ArrayList<Component>();
         iterateDisplayProperties(property -> texts.add(property.getName()));
         return texts;
     }
 
-    public List<Text> getRightColumnText() {
-        final var texts = new ArrayList<Text>();
+    public List<Component> getRightColumnText() {
+        final var texts = new ArrayList<Component>();
         iterateDisplayProperties(property -> texts.add(property.formatted()));
         return texts;
     }
@@ -103,15 +103,15 @@ public class DeathInfo {
         });
     }
 
-    public DefaultedList<ItemStack> getPlayerArmor() {
+    public NonNullList<ItemStack> getPlayerArmor() {
         var propertyOptional = getProperty(INVENTORY_KEY);
-        if (propertyOptional.isEmpty()) return DefaultedList.of();
+        if (propertyOptional.isEmpty()) return NonNullList.create();
         return ((InventoryProperty) propertyOptional.get()).getPlayerArmor();
     }
 
-    public DefaultedList<ItemStack> getPlayerItems() {
+    public NonNullList<ItemStack> getPlayerItems() {
         var propertyOptional = getProperty(INVENTORY_KEY);
-        if (propertyOptional.isEmpty()) return DefaultedList.of();
+        if (propertyOptional.isEmpty()) return NonNullList.create();
         return ((InventoryProperty) propertyOptional.get()).getPlayerItems();
     }
 

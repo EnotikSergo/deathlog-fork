@@ -5,9 +5,9 @@ import com.glisco.deathlog.death_info.RestorableDeathInfoProperty;
 import io.wispforest.endec.Endec;
 import io.wispforest.endec.StructEndec;
 import io.wispforest.endec.impl.StructEndecBuilder;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 
 public class ScoreProperty implements RestorableDeathInfoProperty {
 
@@ -38,8 +38,8 @@ public class ScoreProperty implements RestorableDeathInfoProperty {
     }
 
     @Override
-    public Text formatted() {
-        return Text.translatable(
+    public Component formatted() {
+        return Component.translatable(
                 "deathlog.deathinfoproperty.score.value",
                 score, levels, xp
         );
@@ -51,9 +51,9 @@ public class ScoreProperty implements RestorableDeathInfoProperty {
     }
 
     @Override
-    public void restore(ServerPlayerEntity player) {
+    public void restore(ServerPlayer player) {
         player.experienceProgress = progress;
-        player.setExperienceLevel(levels);
+        player.setExperienceLevels(levels);
     }
 
     public static class Type extends DeathInfoPropertyType<ScoreProperty> {
@@ -61,7 +61,7 @@ public class ScoreProperty implements RestorableDeathInfoProperty {
         public static final Type INSTANCE = new Type();
 
         private Type() {
-            super("deathlog.deathinfoproperty.score", Identifier.of("deathlog", "score"));
+            super("deathlog.deathinfoproperty.score", Identifier.fromNamespaceAndPath("deathlog", "score"));
         }
 
         @Override

@@ -6,10 +6,10 @@ import io.wispforest.endec.SerializationContext;
 import io.wispforest.owo.serialization.RegistriesAttribute;
 import io.wispforest.owo.serialization.format.nbt.NbtDeserializer;
 import io.wispforest.owo.serialization.format.nbt.NbtSerializer;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,22 +29,22 @@ public abstract class BaseDeathLogStorage implements DeathLogStorage {
 
     private boolean errored = false;
 
-    private final DynamicRegistryManager registries;
+    private final RegistryAccess registries;
 
-    protected BaseDeathLogStorage(DynamicRegistryManager registries) {
+    protected BaseDeathLogStorage(RegistryAccess registries) {
         this.registries = registries;
     }
 
-    protected CompletableFuture<List<DeathInfo>> load(DynamicRegistryManager registries, File file) {
+    protected CompletableFuture<List<DeathInfo>> load(RegistryAccess registries, File file) {
         final var future = new CompletableFuture<List<DeathInfo>>();
-        Util.getIoWorkerExecutor().service().submit(() -> {
+        Util.ioPool().service().submit(() -> {
             if (errored) {
                 LOGGER.warn("Attempted to load DeathLog database even though disk operations are disabled");
                 future.complete(null);
                 return;
             }
 
-            NbtCompound deathNbt;
+            CompoundTag deathNbt;
 
             if (file.exists()) {
                 try {
@@ -70,14 +70,14 @@ public abstract class BaseDeathLogStorage implements DeathLogStorage {
                     return;
                 }
             } else {
-                deathNbt = new NbtCompound();
+                deathNbt = new CompoundTag();
             }
 
             final var list = new ArrayList<DeathInfo>();
-            final Optional<NbtList> infoList = deathNbt.getList("Deaths");
+            final Optional<ListTag> infoList = deathNbt.getList("Deaths");
             try {
                 for (int i = 0; i < infoList.get().size(); i++) {
-                    Optional<NbtCompound> compoundOpt = infoList.get().getCompound(i);
+                    Optional<CompoundTag> compoundOpt = infoList.get().getCompound(i);
                     if (compoundOpt.isPresent()) {
                         list.add(DeathInfo.ENDEC.decodeFully(
                                 SerializationContext.attributes(RegistriesAttribute.of(registries)),
@@ -106,16 +106,16 @@ public abstract class BaseDeathLogStorage implements DeathLogStorage {
         return future;
     }
 
-    protected void save(DynamicRegistryManager registries, File file, List<DeathInfo> listIn) {
+    protected void save(RegistryAccess registries, File file, List<DeathInfo> listIn) {
         final var list = ImmutableList.copyOf(listIn);
-        Util.getIoWorkerExecutor().service().submit(() -> {
+        Util.ioPool().service().submit(() -> {
             if (errored) {
                 LOGGER.warn("Attempted to save DeathLog database even though disk operations are disabled");
                 return;
             }
 
-            final NbtCompound deathNbt = new NbtCompound();
-            final NbtList infoList = new NbtList();
+            final CompoundTag deathNbt = new CompoundTag();
+            final ListTag infoList = new ListTag();
 
             list.forEach(deathInfo -> infoList.add(DeathInfo.ENDEC.encodeFully(
                     SerializationContext.attributes(RegistriesAttribute.of(registries)),
@@ -145,7 +145,7 @@ public abstract class BaseDeathLogStorage implements DeathLogStorage {
     }
 
     @Override
-    public DynamicRegistryManager registries() {
+    public RegistryAccess registries() {
         return this.registries;
     }
 }

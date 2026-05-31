@@ -4,16 +4,16 @@ import com.glisco.deathlog.death_info.DeathInfoProperty;
 import com.glisco.deathlog.death_info.DeathInfoPropertyType;
 import io.wispforest.endec.*;
 import io.wispforest.owo.serialization.format.nbt.NbtEndec;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 
 public class MissingDeathInfoProperty implements DeathInfoProperty {
 
     private final Type type;
-    private final NbtCompound data;
+    private final CompoundTag data;
 
-    public MissingDeathInfoProperty(Type type, NbtCompound data) {
+    public MissingDeathInfoProperty(Type type, CompoundTag data) {
         this.type = type;
         this.data = data;
     }
@@ -24,8 +24,8 @@ public class MissingDeathInfoProperty implements DeathInfoProperty {
     }
 
     @Override
-    public Text formatted() {
-        return Text.empty();
+    public Component formatted() {
+        return Component.empty();
     }
 
     @Override
@@ -39,7 +39,7 @@ public class MissingDeathInfoProperty implements DeathInfoProperty {
             @Override
             public void encodeStruct(SerializationContext ctx, Serializer<?> serializer, Serializer.Struct struct, MissingDeathInfoProperty value) {
                 if (serializer instanceof SelfDescribedSerializer<?>) {
-                    for (String key : value.data.getKeys()) {
+                    for (String key : value.data.keySet()) {
                         struct.field(key, ctx, NbtEndec.ELEMENT, value.data.get(key));
                     }
                 } else {
@@ -52,7 +52,7 @@ public class MissingDeathInfoProperty implements DeathInfoProperty {
                 if (deserializer instanceof SelfDescribedDeserializer<?>) {
                     var map = NbtEndec.ELEMENT.mapOf().decode(ctx, deserializer);
 
-                    var compound = new NbtCompound();
+                    var compound = new CompoundTag();
                     map.forEach(compound::put);
 
                     return new MissingDeathInfoProperty(Type.this, compound);

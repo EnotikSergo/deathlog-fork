@@ -5,8 +5,8 @@ import io.wispforest.owo.ui.core.*;
 import io.wispforest.owo.ui.util.UISounds;
 import io.wispforest.owo.util.EventSource;
 import io.wispforest.owo.util.EventStream;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.input.KeyInput;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.input.KeyEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class DeathListEntryContainer extends FlowLayout {
@@ -42,7 +42,7 @@ public class DeathListEntryContainer extends FlowLayout {
     }
 
     @Override
-    public boolean onMouseDown(Click click, boolean doubled) {
+    public boolean onMouseDown(MouseButtonEvent click, boolean doubled) {
         if (click.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             super.onMouseDown(click, doubled);
             this.select();
@@ -52,10 +52,10 @@ public class DeathListEntryContainer extends FlowLayout {
     }
 
     @Override
-    public boolean onKeyPress(KeyInput key) {
+    public boolean onKeyPress(KeyEvent key) {
         boolean handledBySuper = super.onKeyPress(key);
 
-        int code = key.getKeycode();
+        int code = key.input();
         if (code != GLFW.GLFW_KEY_ENTER
                 && code != GLFW.GLFW_KEY_SPACE
                 && code != GLFW.GLFW_KEY_KP_ENTER) {

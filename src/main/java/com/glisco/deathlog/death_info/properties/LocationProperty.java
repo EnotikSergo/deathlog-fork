@@ -5,9 +5,9 @@ import com.glisco.deathlog.death_info.DeathInfoPropertyType;
 import io.wispforest.endec.Endec;
 import io.wispforest.endec.StructEndec;
 import io.wispforest.endec.impl.StructEndecBuilder;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 
 public class LocationProperty implements DeathInfoProperty {
 
@@ -31,12 +31,12 @@ public class LocationProperty implements DeathInfoProperty {
     }
 
     @Override
-    public Text formatted() {
-        return Text.translatable(
+    public Component formatted() {
+        return Component.translatable(
                 "deathlog.deathinfoproperty.location.value", location,
                 multiplayer
-                        ? Text.translatable("deathlog.deathinfoproperty.location.multiplayer")
-                        : Text.translatable("deathlog.deathinfoproperty.location.singleplayer")
+                        ? Component.translatable("deathlog.deathinfoproperty.location.multiplayer")
+                        : Component.translatable("deathlog.deathinfoproperty.location.singleplayer")
         );
     }
 
@@ -50,7 +50,7 @@ public class LocationProperty implements DeathInfoProperty {
         public static final Type INSTANCE = new Type();
 
         private Type() {
-            super("deathlog.deathinfoproperty.location", Identifier.of("deathlog", "location"));
+            super("deathlog.deathinfoproperty.location", Identifier.fromNamespaceAndPath("deathlog", "location"));
         }
 
         @Override
