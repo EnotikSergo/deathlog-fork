@@ -97,7 +97,7 @@ public class ClientDeathLogStorage extends BaseDeathLogStorage implements Direct
     protected void raiseError(String error) {
         super.raiseError(error);
 
-        Minecraft.getInstance().getToastManager().addToast(new DeathLogToast(SystemToast.SystemToastId.PACK_LOAD_FAILURE, Component.nullToEmpty("DeathLog Database Error"), Component.nullToEmpty(error)));
-        Minecraft.getInstance().getToastManager().addToast(new DeathLogToast(SystemToast.SystemToastId.PACK_LOAD_FAILURE, Component.nullToEmpty("DeathLog Problem"), Component.nullToEmpty("Check your log for details")));
+        Minecraft.getInstance().gui.toastManager().addToast(new DeathLogToast(SystemToast.SystemToastId.PACK_LOAD_FAILURE, Component.nullToEmpty("DeathLog Database Error"), Component.nullToEmpty(error)));
+        Minecraft.getInstance().gui.toastManager().addToast(new DeathLogToast(SystemToast.SystemToastId.PACK_LOAD_FAILURE, Component.nullToEmpty("DeathLog Problem"), Component.nullToEmpty("Check your log for details")));
     }
 }

@@ -78,7 +78,7 @@ public class DeathLogScreen extends BaseUIModelScreen<FlowLayout> {
         });
 
         rootComponent.childById(ButtonComponent.class, "config-button").onPress(button -> {
-            this.minecraft.setScreen(ConfigScreenProviders.get("deathlog").apply(this));
+            this.minecraft.setScreenAndShow(ConfigScreenProviders.get("deathlog").apply(this));
         });
 
         this.uiAdapter.rootComponent.childById(LabelComponent.class, "death-count-label").text(
@@ -273,7 +273,7 @@ public class DeathLogScreen extends BaseUIModelScreen<FlowLayout> {
 
     @Override
     public void onClose() {
-        this.minecraft.setScreen(this.parent);
+        this.minecraft.setScreenAndShow(this.parent);
     }
 
     static {

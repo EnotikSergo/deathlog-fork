@@ -96,7 +96,7 @@ public class DeathLogPackets {
         });
 
         CHANNEL.registerClientbound(DeathInfoData.class, (message, access) -> {
-            if (!(access.runtime().screen instanceof DeathLogScreen screen)) {
+            if (!(access.runtime().gui.screen() instanceof DeathLogScreen screen)) {
                 BaseDeathLogStorage.LOGGER.warn("Received invalid death info packet");
                 return;
             }
