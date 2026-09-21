@@ -5,8 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "ClientPlayNetworkHandlerMixin",
-    "MinecraftServerAccessor",
-    "SystemToastAccessor"
+    "MinecraftServerAccessor"
   ],
   "server": [
     "ServerPlayerEntityMixin"
