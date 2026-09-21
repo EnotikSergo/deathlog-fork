@@ -35,7 +35,7 @@ public abstract class ClientPlayNetworkHandlerMixin extends ClientCommonPacketLi
         if (DeathLogClient.CONFIG.screenshotsEnabled()) {
             Screenshot.grab(FabricLoader.getInstance().getGameDir().toFile(), this.minecraft.getMainRenderTarget(), text -> {
                 text = Component.literal("§7[§bDeathLog§7] ").append(((MutableComponent) text).withStyle(ChatFormatting.GRAY));
-                this.minecraft.player.displayClientMessage(text, false);
+                this.minecraft.player.sendSystemMessage(text);
             });
         }
     }
@@ -50,7 +50,7 @@ public abstract class ClientPlayNetworkHandlerMixin extends ClientCommonPacketLi
         if (DeathLogClient.CONFIG.screenshotsEnabled()) {
             Screenshot.grab(FabricLoader.getInstance().getGameDir().toFile(), this.minecraft.getMainRenderTarget(), text -> {
                 text = Component.literal("§7[§bDeathLog§7] ").append(((MutableComponent) text).withStyle(ChatFormatting.GRAY));
-                this.minecraft.player.displayClientMessage(text, false);
+                this.minecraft.player.sendSystemMessage(text);
             });
         }
     }

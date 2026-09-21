@@ -3,6 +3,7 @@ package com.glisco.deathlog.client;
 import com.glisco.deathlog.client.gui.DeathLogToast;
 import com.glisco.deathlog.death_info.SpecialPropertyProvider;
 import com.glisco.deathlog.death_info.properties.*;
+import com.glisco.deathlog.duck.MinecraftServerAccessorDuck;
 import com.glisco.deathlog.mixin.MinecraftServerAccessor;
 import com.glisco.deathlog.network.DeathLogPackets;
 import com.glisco.deathlog.storage.BaseDeathLogStorage;
@@ -31,7 +32,7 @@ public class ClientDeathLogStorage extends BaseDeathLogStorage implements Direct
         super(client.level.registryAccess());
         var worldSuffix = DigestUtils.sha1Hex(
                 client.isLocalServer()
-                        ? ((MinecraftServerAccessor) client.getSingleplayerServer()).deathlog_getSession().getLevelId()
+                        ? ((MinecraftServerAccessorDuck) client.getSingleplayerServer()).deathlog_getSession().getLevelId()
                         : client.getCurrentServer().name
         ).substring(0, 10);
 
@@ -68,7 +69,7 @@ public class ClientDeathLogStorage extends BaseDeathLogStorage implements Direct
         deathInfo.setProperty(DeathInfo.DIMENSION_KEY, new StringProperty("deathlog.deathinfoproperty.dimension", player.level().dimension().identifier().toString()));
 
         if (client.isLocalServer()) {
-            deathInfo.setProperty(DeathInfo.LOCATION_KEY, new LocationProperty(((MinecraftServerAccessor) client.getSingleplayerServer()).deathlog_getSession().getLevelId(), false));
+            deathInfo.setProperty(DeathInfo.LOCATION_KEY, new LocationProperty(((MinecraftServerAccessorDuck) client.getSingleplayerServer()).deathlog_getSession().getLevelId(), false));
         } else {
             deathInfo.setProperty(DeathInfo.LOCATION_KEY, new LocationProperty(client.getCurrentServer().name, true));
         }

@@ -100,11 +100,15 @@ public class DeathLogServer implements DedicatedServerModInitializer {
     }
 
     private static Predicate<CommandSourceStack> hasPermission(String node) {
-        return DeathLogCommon.usePermissions() ? Permissions.require(node, 4) : serverCommandSource -> serverCommandSource.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.ADMINS));
+        return DeathLogCommon.usePermissions()
+                ? source -> ((java.util.function.Predicate) me.lucko.fabric.api.permissions.v0.Permissions.require(node, 4)).test(source)
+                : source -> source.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.ADMINS));
     }
 
     public static boolean hasPermission(ServerPlayer player, String node) {
-        return DeathLogCommon.usePermissions() ? Permissions.check(player, node, 4) : player.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.ADMINS));
+        return DeathLogCommon.usePermissions()
+                ? ((java.util.function.Predicate) me.lucko.fabric.api.permissions.v0.Permissions.require(node, 4)).test(player.createCommandSourceStack())
+                : player.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.ADMINS));
     }
 
     private static int executeRestoreLatest(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {

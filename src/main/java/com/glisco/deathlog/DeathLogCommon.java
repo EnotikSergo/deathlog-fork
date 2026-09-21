@@ -16,7 +16,7 @@ import org.jetbrains.annotations.ApiStatus;
 public class DeathLogCommon implements ModInitializer {
 
     public static final Registry<DeathInfoPropertyType<?>> PROPERTY_TYPES = FabricRegistryBuilder
-        .createSimple(ResourceKey.<DeathInfoPropertyType<?>>createRegistryKey(Identifier.fromNamespaceAndPath("deathlog", "property_type")))
+        .create(ResourceKey.<DeathInfoPropertyType<?>>createRegistryKey(Identifier.fromNamespaceAndPath("deathlog", "property_type")))
         .buildAndRegister();
 
     private static DeathLogStorage currentStorage = null;
